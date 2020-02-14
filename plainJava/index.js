@@ -215,7 +215,7 @@ function calcBlue () {
         console.log(nAll, nAlive, resulted);
         if (resulted < maxRain) {
             console.log("Increase");
-            nAlive == 0 ? control.stepUp(5) : control.stepUp(1);
+            control.stepUp(nAlive === 0 ?  5 :  1);
             window.requestAnimationFrame(simulateInput);
         } else {
             console.log("done");
