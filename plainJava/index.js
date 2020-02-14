@@ -26,15 +26,15 @@ var floodContext;
 loader.loaderVisible = () => {
   loader.classList.remove("hidden");
   loader.classList.add("visible");
-}
+};
 loader.loaderHide  = () => {
   loader.classList.remove("visible");
   loader.classList.add("hidden");
-}
+};
 
 var simulateInput = function(){ 
   control.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-}
+};
 
 var mURL = "https://api.mapbox.com/styles/v1/vladsalat/cjp00ru9502172rnxwd9t81nb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidmxhZHNhbGF0IiwiYSI6ImNpdXh4cjM4YzAwMmsyb3IzMDA0aHV4a3YifQ.TiC4sHEfBVhLetC268aGEQ";
 var levelLayer = new TileLayer({ source: new XYZ({ url: mURL })});
@@ -140,7 +140,7 @@ var map = new Map({
 
 map.on("movestart", function(e){
     control.value=1;
-    output.innerText = ""
+    output.innerText = "";
 });
 
 map.once('rendercomplete', function(){
@@ -168,12 +168,12 @@ var init = function(){
     console.log(error, document.getElementsByTagName('canvas'));
   }
 
-}
+};
 
 rain.addEventListener('click', function(){
     control.value = 60;
     simulateInput();
-})
+});
 
 control.addEventListener('input', function() {
   output.innerText = "Probability - " + (1000-control.value)/1000 + "% ("+ control.value +")" ;
@@ -190,8 +190,8 @@ raster.on('beforeoperations', function(event) {
 });
 
 raster.on('afteroperations',function(){
-  console.log(event.data.alive , alive)
-})
+  console.log(event.data.alive , alive);
+});
 
 var locations = document.getElementsByClassName('location');
 for (var i = 0, ii = locations.length; i < ii; ++i) {
@@ -212,17 +212,17 @@ function calcBlue () {
             }
         } 
         var resulted = nAlive/nAll*100;
-        console.log(nAll, nAlive, resulted)
+        console.log(nAll, nAlive, resulted);
         if (resulted < maxRain) {
-            console.log("Increase")
+            console.log("Increase");
             nAlive == 0 ? control.stepUp(5) : control.stepUp(1);
-            window.requestAnimationFrame(simulateInput)
+            window.requestAnimationFrame(simulateInput);
         } else {
             console.log("done");
             loader.loaderHide();
         }
     } else {
-        console.warn("nix, try to recatch")
+        console.warn("nix, try to recatch");
         setTimeout(init,1000);
     }
 }
@@ -234,7 +234,7 @@ home.addEventListener("click", function(){
         var coordinates = geolocation.getPosition();
         mapView.setCenter(fromLonLat(coordinates));
     });
-})
+});
 
 function relocate(event) {
   var data = event.target.dataset;
