@@ -39,38 +39,6 @@ var simulateInput = function(){
 var mURL = "https://api.mapbox.com/styles/v1/vladsalat/cjp00ru9502172rnxwd9t81nb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidmxhZHNhbGF0IiwiYSI6ImNpdXh4cjM4YzAwMmsyb3IzMDA0aHV4a3YifQ.TiC4sHEfBVhLetC268aGEQ";
 var levelLayer = new TileLayer({ source: new XYZ({ url: mURL })});
 
-var selft = window;
-self.empty = 0;
-var full = 0;
-
-//value = [R;G;B;A]
-function countAlive()  {
-  var empty = self.empty;
-  var full = 0;    
-  function result(){
-    console.log(empty,full);
-  }
-  function step(){
-    empty += 1;
-  }
-  function plusFull(){
-    full += 1;
-  }
-  return {
-    empty: empty,
-    full: full
-  };
-}
-
-function resetMap(){
-  alive.empty = 0;
-  alive.full = 0;
-}
-
-function calculateLevel(value, countAlive){
-  countAlive.step();
-  if(value[4]) countAlive.plusFull();
-}
 
 function calcPixel(pixels, data){
   var pixel = pixels[0];
@@ -102,18 +70,16 @@ function calcPixel(pixels, data){
 
 var mBoxElevationURL = 'https://api.mapbox.com/v4/mapbox.terrain-rgb/{z}/{x}/{y}.pngraw?access_token=pk.eyJ1IjoidmxhZHNhbGF0IiwiYSI6ImNqMHA5dDUxazAwMDgyd29heXozcXN6cTEifQ.3svfh2C2-MvbXgOLRz8igw';
 var elevation = new XYZ({ crossOrigin: 'anonymous', url: mBoxElevationURL});
+
 var raster = new RasterSource({ 
   sources: [elevation], 
   operation: function(pixels, data){
     var pixel = calcPixel(pixels, data);
-    calculateLevel(pixel, alive);
+    data.empty ++;
+    if(pixel[3] !== 0) data.full ++;
     return pixel;
   },  
-  lib: {
-    calculateLevel: calculateLevel, 
-    calcPixel:calcPixel,
-    alive: alive
-  }
+  lib: { calcPixel:calcPixel }
 });
 var floodLayer = new ImageLayer({opacity: 0.6, source: raster });
 
@@ -163,7 +129,7 @@ var init = function(){
     //floodCanvas = document.getElementsByTagName('canvas')[1];
     //floodContext = floodCanvas.getContext('2d'); 
     loader.loaderHide();
-    console.log("done", floodCanvas, floodContext);
+    //console.log("done", floodCanvas, floodContext);
   } catch (error) {
     console.log(error, document.getElementsByTagName('canvas'));
   }
@@ -172,25 +138,30 @@ var init = function(){
 
 rain.addEventListener('click', function(){
     control.value = 60;
-    simulateInput();
+    animateFlood();
 });
 
 control.addEventListener('input', function() {
   output.innerText = "Probability - " + (1000-control.value)/1000 + "% ("+ control.value +")" ;
   raster.changed();
   loader.loaderVisible();
-  console.log(alive);
   //calcBlue();
 });
 
 raster.on('beforeoperations', function(event) { 
   //resetMap();
   event.data.level = control.value; 
-  event.data.alive = alive;
+  event.data.empty = 0; 
+  event.data.full = 0; 
 });
 
-raster.on('afteroperations',function(){
-  console.log(event.data.alive , alive);
+window.resulted = {
+  full:1,
+  empty:10000
+};
+
+raster.on('afteroperations',function(result){
+  window.resulted  = result.data;
 });
 
 var locations = document.getElementsByClassName('location');
@@ -198,34 +169,22 @@ for (var i = 0, ii = locations.length; i < ii; ++i) {
   locations[i].addEventListener('click', relocate);
 }
 
-function calcBlue () {
-    if(floodCanvas == 2){  
-        var nAll = 0;
-        var nAlive = 0;
-        var p = floodContext.getImageData(0,0,floodCanvas.width,floodCanvas.height).data;
-        
-        for (var y = 0, i =0 ; y < floodCanvas.height; y++ )
-          for (var x = 0; x < floodCanvas.width; x++, i+=4){
-            nAll++;
-            if (p[i+3]){
-                nAlive++;
-            }
-        } 
-        var resulted = nAlive/nAll*100;
-        console.log(nAll, nAlive, resulted);
-        if (resulted < maxRain) {
-            console.log("Increase");
-            control.stepUp(nAlive === 0 ?  5 :  1);
-            window.requestAnimationFrame(simulateInput);
-        } else {
-            console.log("done");
-            loader.loaderHide();
-        }
-    } else {
-        console.warn("nix, try to recatch");
-        setTimeout(init,1000);
-    }
+function animateFlood () {
+  var data =  window.resulted;
+  var resulted = data.full/data.empty*100;
+  console.log(data.empty,resulted, control.value);
+  if (resulted < maxRain) {
+      console.log("Increase");
+      control.stepUp(data.full === 0 ?  2 :  1);
+      raster.changed();
+      window.requestAnimationFrame(animateFlood);
+  } else {
+      console.log("done");
+      loader.loaderHide();
+  }
 }
+
+window.run = animateFlood;
 
 
 home.addEventListener("click", function(){
