@@ -1,5 +1,4 @@
-export default function flood(pixels, data) {
-    //console.count(data);
+export default function calcPixel(pixels, data){
     var pixel = pixels[0];
     if (pixel[3]) {
       var height = -10000 + ((pixel[0] * 256 * 256 + pixel[1] * 256 + pixel[2]) * 0.1);
