@@ -59,7 +59,7 @@ var map = new Map({
   controls: [],
   layers: [
     //new TileLayer({ source: new OSM(), opacity: 0.5 }),
-    //new TileLayer({ source: new XYZ({ url: mapBoxBackgorundMap })}),
+    new TileLayer({ source: new XYZ({ url: mapBoxBackgorundMap })}),
     new ImageLayer({opacity: 0.6, source: raster })
   ],
   view: mapView

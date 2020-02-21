@@ -41,7 +41,7 @@ function run(){
   
   //To get the pixels, draw the image onto a canvas. From the canvas get the Pixel (R,G,B,A)
   function getTerrainPixelData() {
-    img = document.getElementsByTagName("canvas")[0];
+    img = document.getElementsByTagName("canvas")[document.getElementsByTagName("canvas").length-1];
     var canvas = document.getElementById("canvas");
     
 
@@ -55,9 +55,9 @@ function run(){
     for (var i = 0, n = data.length; i < n; i += 4) {
       // get the average value of R, G and B.
       var color = data[i] + data[i+1] + data[i+2];
+      normPixels.push((color) / 3);
       if(color !== 0) {
         counter++;
-        normPixels.push((color) / 3);
       }
     }
     console.log(counter) //
