@@ -50,7 +50,7 @@ arcgis API? Hat hydrological Models!! Aber nur für lokale Dateien :(
 -- https://developers.arcgis.com/rest/services-reference/raster-analysis-tasks-overview.htm
 
 ## hier geht es online
--- https://scalgo.com/live/global?ll=6.960033%2C51.450764&lrs=mapbox_basic%2Cglobal%2FSRTM_4_1%3Asrtm_v4_1_dem-simplified-2m_persistence%2Cglobal%2FSRTM_4_1%3Asrtm_v4_1_dem-sinks%2Cglobal%2Fhydrosheds%3Aedgeflow&res=2.388657133911758&tool=zoom&Persistence=4&FlowDetail=100000
+- https://scalgo.com/live/global?ll=6.960033%2C51.450764
 wie machen die das online?
 - https://scalgo.com/en-US/live-flood-risk
 -- https://scalgo.com/assets/flashflood.mp4
@@ -68,3 +68,8 @@ gis rest: https://developers.arcgis.com/rest/services-reference/flow-direction.h
 -- Cool!! https://github.com/modelcreate/epanet-js || https://github.com/ewsterrenburg?tab=stars
 
 -- shatten für die Karte: https://blog.mapbox.com/realistic-terrain-with-custom-styling-ce1fe98518ab
+
+-- sammlung durchgehen: https://github.com/sacridini/Awesome-Geospatial#javascript
+--- https://www.movable-type.co.uk/scripts/geodesy-library.html
+
+-- check https://ginkgoch.com/
