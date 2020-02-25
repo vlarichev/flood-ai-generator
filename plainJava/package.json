@@ -23,6 +23,6 @@
     "build": "parcel build --experimental-scope-hoisting --public-url . index.html",
     "normal": "parcel build --public-url . index.html"
   },
-  "author": "",
+  "author": "Vlad Larichev",
   "license": "ISC"
 }
